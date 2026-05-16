@@ -36,7 +36,7 @@ main{padding:28px 32px;max-width:1200px;margin:0 auto}
 .tag.aziatisch{background:#fce8dc;color:var(--accent)}
 .tag.midden-oosters{background:#e8e4f4;color:#6b5fa0}
 .tag.veggie{background:#e4f0e8;color:#3d6b4a}
-.tag.snel{background:#f0f0e8;color:#6b6b3d}.tag.dessert{background:#f4e8f0;color:#8b3d6b}
+.tag.snel{background:#f0f0e8;color:#6b6b3d}.tag.dessert{background:#f4e8f0;color:#8b3d6b}.tag.spaans{background:#fce8e8;color:#8b3d3d}
 .card h2{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:400;line-height:1.3}
 .card-desc{padding:12px 22px;font-size:.84rem;color:var(--muted);line-height:1.6}
 .card-meta{padding:10px 22px 16px;display:flex;gap:12px;font-size:.8rem;color:var(--muted);flex-wrap:wrap;align-items:center}
@@ -104,6 +104,7 @@ main{padding:28px 32px;max-width:1200px;margin:0 auto}
   <button class="filter-btn" onclick="setFilter('veggie',this)">Veggie</button>
   <button class="filter-btn" onclick="setFilter('snel',this)">Snel (&lt;30 min)</button>
   <button class="filter-btn" onclick="setFilter('dessert',this)">Dessert</button>
+  <button class="filter-btn" onclick="setFilter('spaans',this)">Spaans</button>
 </div>
 <main><div class="grid" id="grid"></div></main>
 
@@ -218,6 +219,27 @@ var DEFAULT = [
    ingredients:["300g rigatoni","2 el nduja","2 bollen buffelmozzarella","1 bosje basilicum","800g snacktomaatjes, gehalveerd","2 uien, fijngesneden","2 teentjes knoflook, uitgeperst","2 el olijfolie","Zwarte peper en zout naar smaak"],
    steps:["Breng een pan water aan de kook. Kook de rigatoni volgens de aanwijzing op de verpakking. Bewaar 2 el kookvocht.","Pers de knoflook uit en pel en snijd de uien fijn. Halveer de snacktomaatjes.","Verhit 1 el olijfolie in een koekenpan en fruit de knoflook en ui. Voeg 2-3 el nduja toe en de snacktomaatjes. Bak 8-10 minuten tot de tomaatjes zacht zijn. Begin met 2 el nduja - het heeft best wat pit.","Giet de rigatoni af en roer door de tomatensaus. Voeg eventueel wat kookvocht toe om de saus smeuiger te maken.","Snijd de buffelmozzarella doormidden. Schep de pasta op borden en verdeel de mozzarella erover. Garneer met verse basilicum."],
    notes:"Nduja is een zachte Calabrese worst met pit - begin met 2 el en voeg meer toe naar smaak. Ook lekker met burrata. Voeg voor wat frisheid de rasp van 1 citroen toe aan de saus."}
+,
+  {id:20,name:"Salmorejo",desc:"Klassieke koude Spaanse tomatensoep uit Cordoba. Romig, fris en verrassend eenvoudig.",tags:["veggie","spaans"],time:"15 min",servings:6,kcal:220,
+   ingredients:["1 kg rijpe rode tomaten","120g oud wit brood (compact)","120ml extra vergine olijfolie","1 klein knoflookteentje (groene kiem verwijderd)","1 tl zout","2 hardgekookte eieren voor garnering","Iberische ham in blokjes voor garnering"],
+   steps:["Snijd de tomaten in kwarten en doe in de blender. Voeg het brood in stukken toe, dan de knoflook en het zout.","Blend alles tot een gladde massa. Blend opnieuw en voeg de olijfolie in een langzame gestage stroom toe om een romige zalmorange emulsie te krijgen.","Breng op smaak met extra zout indien nodig. Let op: knoflook smaakt sterker na het rusten in de koelkast.","Zet minimaal 2 uur in de koelkast voor het serveren.","Garneer met gehakt hardgekookt ei, blokjes ham en een scheutje olijfolie."],
+   notes:"Tip voor hardgekookte eieren zonder grijze dooier: breng water aan de kook met een snufje zout en een paar druppels azijn. Voeg het ei toe en kook precies 10 minuten. Van Taller Andaluz de Cocina."},
+  {id:21,name:"Spinach with chickpeas",desc:"Spaanse stoofschotel met spinazie, kikkererwten en een knapperig broodpasta. Authentiek Andalusisch.",tags:["veggie","spaans"],time:"35 min",servings:6,kcal:280,
+   ingredients:["900g verse spinazie","150g gekookte kikkererwten","1 kleine ui","4 knoflooktenen","2 sneetjes oud wit brood","5-6 el tomatenpuree","0,5 tl gerookte zoete paprika","1 el komijn (plus extra)","Sherryazijn","Extra vergine olijfolie","Zout"],
+   steps:["Kook de spinazie 5-6 minuten en zet apart. Bewaar het kookvocht.","Verhit 4-5 el olijfolie in een grote koekenpan. Kneus en pel de knoflook en bak op laag vuur tot goudbruin. Vis eruit en doe in een vijzel.","Snijd het brood in blokjes en bak in dezelfde olie tot knapperig. Doe ook in de vijzel. Stamp samen en voeg een el spinazievocht toe om een pasta te maken.","Bak de gesnipperde ui in dezelfde pan met een snufje zout tot licht gekarameliseerd. Voeg paprika en komijn toe en roer de kikkererwten erdoor. Voeg tomatenpuree toe en bak 2 minuten tot de olie licht scheidt.","Voeg de spinazie met wat kookvocht toe, de broodpasta, 1 tl zout, nog een tl komijn en een tl sherryazijn. Meng goed en kook tot het vocht reduceert tot een romige stoofschotel.","Laat 10 minuten rusten voor het serveren."],
+   notes:"Een beetje te gare spinazie werkt hier beter dan te stug. De broodpasta is de geheime smaakmaker. Van Taller Andaluz de Cocina."},
+  {id:22,name:"Paella Valenciana",desc:"Authentieke Valenciaanse paella met kip, runner beans, artisjok en saffraan. Recept van een Spaanse kookles.",tags:["spaans"],time:"90 min",servings:6,kcal:480,
+   ingredients:["450g rondkorrelige rijst of bomba rijst (ca. 70g pp)","1 kip (bouten en vleugels, zonder bot, vel erop)","10 sperziebonen","0,5 kop verse garrofo of boterbonen","2 verse artisjokken (indien seizoen)","200g tomatenpuree","3 knoflooktenen","7 saffraan draadjes per persoon","0,5 tl gerookte zoete paprika","Rozemarijn","Zout en extra vergine olijfolie","3 liter koud water voor kippenbouillon","1 kipkarkas en extra botten voor bouillon"],
+   steps:["Maak de kippenbouillon: karkassen met water in een pan, breng aan de kook en schep periodiek het schuim eraf. Kook 30 minuten.","Zorg dat de paellapan waterpas staat. Test met een druppel olijfolie in het midden - die moet precies in het centrum blijven. Bedek de bodem met olijfolie.","Zout het vlees en bak op hoog vuur. Laat het plakken en wacht tot het loslaat voor je omdraait. Niet te veel roeren anders droogt het vlees uit.","Bereid de artisjokken (schillen, top eraf, halveren, haar verwijderen, in 6 stukken). Breek de sperziebonen en hak de knoflook fijn.","Schuif de kip naar de rand. Bak sperziebonen en artisjok met een snufje zout tot gekarameliseerd. Schuif ook naar de rand. Bak de knoflook in het midden op laag vuur tot goudbruin.","Voeg paprika toe, meng 4-5 seconden, dan tomatenpuree. Voeg garrofo toe, breng alles samen en kook 2 minuten. Voeg verkruimelde saffraan toe en roer door.","Giet kippenbouillon tot aan de klinknagels van de pan. Breng aan de kook en kook in tot net onder de klinknagels. Voeg 1 tl zout toe.","Strooi de rijst in een rechte lijn van handvat tot handvat precies tussen de klinknagels. Zet direct een timer op 18 minuten. Verdeel de rijst gelijkmatig. Kook: 5 min hoog vuur, 5 min middelhoog, 8 min laag vuur.","De laatste 30 seconden vuur omhoog, rozemarijn erop. Timer af: vuur uit, dek af met een theedoek en laat 5-8 minuten rusten voor het serveren."],
+   notes:"De waterpas pan is essentieel voor egale rijstgaring. Niet roeren na het toevoegen van de rijst. Optioneel: konijnenvlees en slakken voor de echte Valenciaanse versie. Van Taller Andaluz de Cocina."},
+  {id:23,name:"Lemon sorbet with cava",desc:"Ultiem simpel en feestelijk Spaans dessert. Citroenijs gemixt met cava en munt.",tags:["dessert","spaans"],time:"5 min",servings:6,kcal:180,
+   ingredients:["1 liter citroensorbet of citroenijs","350ml cava","3-4 muntblaadjes plus extra voor garnering"],
+   steps:["Blend citroensorbet, cava en muntblaadjes samen in een blender.","Serveer direct in een champagneglas met een rietje en een muntblaadje als garnering."],
+   notes:"Zo simpel als het klinkt. Zorg dat de sorbet niet te zacht is voor het blenden. Van Taller Andaluz de Cocina."},
+  {id:24,name:"Sangria",desc:"Klassieke Spaanse sangria met rood fruit, kaneel, rode wijn en brandy.",tags:["spaans"],time:"70 min",servings:6,kcal:160,
+   ingredients:["0,5 appel, in plakjes","0,5 perzik of sinaasappel, in plakjes","0,5 kaneelstokje","0,375 liter rode wijn (halve fles)","50ml brandy, rum of Licor 43","1 liter citroensoda of sinaasappelsoda"],
+   steps:["Doe het gesneden fruit en het kaneelstokje in een karaf. Voeg de rode wijn en brandy toe.","Laat 1 uur staan zodat het fruit kan macereren in de alcohol.","Voeg de soda toe naar smaak.","Serveer met ijsblokjes."],
+   notes:"Hoe langer het fruit macereert hoe beter de smaak. Pas de hoeveelheid soda aan naar hoe zoet/sterk je het wil. Van Taller Andaluz de Cocina."}
 ];
 
 var recipes = [];
