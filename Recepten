@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receptenboek</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f0e8;--paper:#fdfaf4;--ink:#1a1208;--accent:#c8622a;--accent2:#4a7c59;--muted:#8a7d6a;--border:#ddd5c0;--tag-bg:#ede8dc}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;font-weight:300;min-height:100vh}
+header{padding:40px 32px 28px;border-bottom:1px solid var(--border);background:var(--paper);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+header h1{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:400;line-height:1.1}
+header h1 em{font-style:italic;color:var(--accent)}
+.subtitle{font-size:.82rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.header-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=text]{border:1px solid var(--border);background:var(--bg);padding:10px 16px;font-family:"DM Sans",sans-serif;font-size:.9rem;color:var(--ink);border-radius:4px;width:210px;outline:none;transition:border-color .2s}
+input[type=text]:focus{border-color:var(--accent)}
+button{cursor:pointer;font-family:"DM Sans",sans-serif;border:none;border-radius:4px;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff;padding:10px 20px;font-size:.9rem;font-weight:500}
+.btn-primary:hover{background:#b0551f}
+.btn-ghost{background:transparent;color:var(--muted);padding:8px 14px;font-size:.85rem;border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.filter-bar{padding:14px 32px;display:flex;gap:8px;flex-wrap:wrap;background:var(--paper);border-bottom:1px solid var(--border)}
+.filter-btn{background:var(--tag-bg);color:var(--muted);padding:6px 14px;font-size:.8rem;border:1px solid transparent;border-radius:100px;letter-spacing:.04em}
+.filter-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filter-btn:hover:not(.active){border-color:var(--muted)}
+main{padding:28px 32px;max-width:1200px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.card{background:var(--paper);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.card-header{padding:22px 22px 14px;border-bottom:1px solid var(--border)}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:var(--tag-bg);color:var(--muted);font-weight:500}
+.tag.airfryer{background:#e8f0ea;color:var(--accent2)}
+.tag.aziatisch{background:#fce8dc;color:var(--accent)}
+.tag.midden-oosters{background:#e8e4f4;color:#6b5fa0}
+.tag.veggie{background:#e4f0e8;color:#3d6b4a}
+.tag.snel{background:#f0f0e8;color:#6b6b3d}.tag.dessert{background:#f4e8f0;color:#8b3d6b}.tag.spaans{background:#fce8e8;color:#8b3d3d}
+.card h2{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:400;line-height:1.3}
+.card-desc{padding:12px 22px;font-size:.84rem;color:var(--muted);line-height:1.6}
+.card-meta{padding:10px 22px 16px;display:flex;gap:12px;font-size:.8rem;color:var(--muted);flex-wrap:wrap;align-items:center}
+.kcal-badge{background:#fff3ec;color:var(--accent);font-weight:500;padding:3px 10px;border-radius:100px;font-size:.76rem;border:1px solid #f5d5c0}
+.card-delete{position:absolute;top:10px;right:10px;background:transparent;color:var(--border);font-size:1rem;padding:4px 8px;border-radius:4px;opacity:0;transition:opacity .15s}
+.card:hover .card-delete{opacity:1}
+.card-delete:hover{color:#c0392b!important;background:#fde8e8}
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,15,5,.6);z-index:100;padding:20px;overflow-y:auto;backdrop-filter:blur(2px)}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal{background:var(--paper);border-radius:8px;max-width:700px;width:100%;margin:auto;overflow:hidden;animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);position:relative}
+.modal-header h2{font-family:"Playfair Display",serif;font-size:1.65rem;font-weight:400;line-height:1.2;padding-right:44px;margin-bottom:14px}
+.modal-close{position:absolute;top:18px;right:18px;background:var(--tag-bg);color:var(--muted);font-size:1rem;padding:5px 11px;border-radius:4px}
+.modal-close:hover{background:var(--border)}
+.modal-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.meta-item{font-size:.82rem;color:var(--muted)}
+.scaler{display:flex;align-items:center;gap:8px;background:var(--tag-bg);border-radius:100px;padding:5px 12px}
+.scaler>span:first-child{font-size:.8rem;color:var(--muted)}
+.scaler-val{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--ink);min-width:22px;text-align:center}
+.scaler button{background:none;color:var(--muted);font-size:1.15rem;padding:0 3px;line-height:1}
+.scaler button:hover{color:var(--accent)}
+.kcal-info{background:#fff3ec;color:var(--accent);font-size:.8rem;font-weight:500;padding:5px 12px;border-radius:100px;border:1px solid #f5d5c0}
+.modal-body{padding:24px 32px 32px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.modal-body h3{font-family:"Playfair Display",serif;font-size:1rem;font-weight:400;margin-bottom:10px;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:7px}
+.ingredient-list{list-style:none}
+.ingredient-list li{padding:6px 0;font-size:.87rem;border-bottom:1px dotted var(--border);display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.ingredient-list li:last-child{border:none}
+.ing-amount{color:var(--accent);font-size:.82rem;white-space:nowrap;font-weight:500}
+.step-list{list-style:none}
+.step-list li{padding:7px 0;font-size:.87rem;line-height:1.55;border-bottom:1px dotted var(--border);display:flex;gap:10px}
+.step-list li:last-child{border:none}
+.step-num{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--accent);min-width:18px}
+.modal-notes{grid-column:1/-1;background:var(--tag-bg);border-radius:4px;padding:12px 16px;font-size:.82rem;color:var(--muted);line-height:1.6}
+.modal-notes strong{color:var(--ink);display:block;margin-bottom:4px;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase}
+.add-form{display:flex;flex-direction:column;gap:14px}
+.add-form label{font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.add-form input,.add-form textarea{width:100%;border:1px solid var(--border);background:var(--bg);padding:9px 13px;font-family:"DM Sans",sans-serif;font-size:.88rem;color:var(--ink);border-radius:4px;outline:none}
+.add-form textarea{resize:vertical;min-height:80px}
+.add-form input:focus,.add-form textarea:focus{border-color:var(--accent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.empty{grid-column:1/-1;text-align:center;padding:64px 32px;color:var(--muted)}
+.empty p{font-family:"Playfair Display",serif;font-size:1.2rem;font-style:italic}
+@media(max-width:560px){.modal-body{grid-template-columns:1fr}main{padding:16px}header{padding:24px 18px 18px}.filter-bar{padding:10px 18px}.modal-header{padding:22px 18px 16px}.modal-body{padding:18px}.form-row,.form-row-3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Mijn <em>Recepten</em>boek</h1>
+    <p class="subtitle">Persoonlijke collectie</p>
+  </div>
+  <div class="header-actions">
+    <input type="text" id="search" placeholder="Zoeken..." oninput="render()">
+    <button class="btn-primary" onclick="openAdd()">+ Recept toevoegen</button>
+    <button class="btn-ghost" onclick="resetApp()">&#8635; Reset</button>
+  </div>
+</header>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('alle',this)">Alle</button>
+  <button class="filter-btn" onclick="setFilter('airfryer',this)">Airfryer</button>
+  <button class="filter-btn" onclick="setFilter('aziatisch',this)">Aziatisch</button>
+  <button class="filter-btn" onclick="setFilter('midden-oosters',this)">Midden-Oosters</button>
+  <button class="filter-btn" onclick="setFilter('veggie',this)">Veggie</button>
+  <button class="filter-btn" onclick="setFilter('snel',this)">Snel (&lt;30 min)</button>
+  <button class="filter-btn" onclick="setFilter('dessert',this)">Dessert</button>
+  <button class="filter-btn" onclick="setFilter('spaans',this)">Spaans</button>
+</div>
+<main><div class="grid" id="grid"></div></main>
+
+<div class="overlay" id="viewOverlay" onclick="closeIfBg(event,'viewOverlay')">
+  <div class="modal" id="viewModal"></div>
+</div>
+
+<div class="overlay" id="addOverlay" onclick="closeIfBg(event,'addOverlay')">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nieuw recept</h2>
+      <button class="modal-close" onclick="closeAdd()">&#10005;</button>
+    </div>
+    <div style="padding:24px 32px 32px">
+      <div class="add-form">
+        <div class="form-row">
+          <div><label>Naam recept *</label><input id="f-name" type="text" placeholder="bijv. Gyoza"></div>
+          <div><label>Bereidingstijd</label><input id="f-time" type="text" placeholder="bijv. 30 min"></div>
+        </div>
+        <div><label>Omschrijving</label><input id="f-desc" type="text" placeholder="Korte omschrijving"></div>
+        <div class="form-row-3">
+          <div><label>Porties</label><input id="f-servings" type="text" placeholder="2"></div>
+          <div><label>kcal per persoon</label><input id="f-kcal" type="text" placeholder="bijv. 400"></div>
+          <div><label>Tags (komma-gescheiden)</label><input id="f-tags" type="text" placeholder="airfryer, veggie"></div>
+        </div>
+        <div><label>Ingredienten (1 per regel, bijv: 300g kipfilet)</label><textarea id="f-ingredients" placeholder="300g kipfilet&#10;2 paprika&#10;1 el sojasaus"></textarea></div>
+        <div><label>Bereiding (1 stap per regel)</label><textarea id="f-steps" placeholder="Verwarm de airfryer op 200C&#10;Meng de kruiden"></textarea></div>
+        <div><label>Notities / tips</label><textarea id="f-notes" placeholder="Optionele tips..." style="min-height:55px"></textarea></div>
+        <button class="btn-primary" onclick="saveRecipe()">Recept opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var DEFAULT = [
+  {id:1,name:"Gyoza met citroengras-rawit dipsaus",desc:"Pittige Aziatische gyoza met een frisse dipsaus. Snel en makkelijk doordeweeks.",tags:["aziatisch"],time:"25 min",servings:2,kcal:480,
+   ingredients:["300g gyoza (diepvries)","150g rijst","60g Kikkoman sojasaus","1 rawit, fijngesneden","1 tl gesneden citroengras","2 limoenbladen, heel fijn gesneden","15g water","1 el neutrale olie"],
+   steps:["Meng sojasaus, water, rawit, citroengras en limoenblad voor de dipsaus. Laat staan.","Kook de rijst volgens verpakking.","Verhit olie in een koekenpan. Leg gyoza plat en bak 2-3 minuten tot goudbruin.","Voeg een scheut water toe, dek af en stoom 3-4 minuten.","Serveer met rijst en de dipsaus ernaast."],
+   notes:"Dipsaus in grammen: 60g sojasaus, 15g water, 5g rawit, 8g citroengras, 2g limoenblad."},
+  {id:2,name:"Gebakken rijst met ei, erwten en lente-ui",desc:"Klassieke gebakken rijst. Koude rijst van de dag ervoor is de sleutel.",tags:["aziatisch","snel"],time:"15 min",servings:2,kcal:420,
+   ingredients:["300g koude gekookte rijst","2 eieren","80g erwten (diepvries)","3 lente-uitjes, in ringetjes","2 el Kikkoman sojasaus","1 tl vissaus","1 rawit, fijngesneden","2 el neutrale olie"],
+   steps:["Verkruimel klontjes in de rijst. Ontdooi erwten onder warm water.","Verhit olie op hoogste stand. Bak de rijst 3-4 minuten tot licht gekleurd.","Maak een holletje, kluts eieren erin en roer tot bijna gestold. Dan door de rijst.","Voeg erwten en rawit toe, bak nog 1-2 minuten.","Voeg sojasaus en vissaus toe, proef en pas aan.","Serveer met lente-ui erover."],
+   notes:"Gebruik een hete pan - te laag vuur geeft papperige rijst."},
+  {id:3,name:"Airfryer kip met zoete aardappel en geroosterde groenten",desc:"Alles in de airfryer, weinig afwas, klaar in 30 minuten. Gezond doordeweeks.",tags:["airfryer","aziatisch"],time:"30 min",servings:2,kcal:520,
+   ingredients:["300g kipfilet of kippendij","250g zoete aardappel, blokjes van 2 cm","200g paprika, in stukken","1 rode ui, in parten","40g olijfolie","1 el Kikkoman sojasaus","1 tl vissaus","3g knoflookpoeder","3g paprikapoeder","1 rawit of chilivlokken","2 limoenbladen, fijn gesneden"],
+   steps:["Meng olijfolie, sojasaus, vissaus, knoflookpoeder, paprikapoeder, rawit en limoenblad.","Snijd kip in stukken van 4 cm. Gooi alles door de marinade.","Verwarm airfryer voor op 200 graden C.","Leg zoete aardappelblokjes als eerste in de airfryer. Bak 5 minuten.","Voeg kip, paprika en ui toe. Bak nog 18-20 minuten op 200 graden C. Halverwege omschudden.","Serveer direct, eventueel met extra sojasaus."],
+   notes:"Smeer het rooster licht in met olie voor gebruik. Kippendij is sappiger dan filet."},
+  {id:4,name:"Geroosterde aubergine met knapperige kikkererwten en tahinisaus",desc:"Midden-Oosterse geroosterde aubergine met knapperige kikkererwten, romige tahinisaus en mini naan.",tags:["airfryer","midden-oosters","veggie"],time:"35 min",servings:2,kcal:550,
+   ingredients:["2 aubergines, in plakken van 1,5 cm","400g kikkererwten (blik), afgespoeld en drooggedept","40g olijfolie","3g knoflookpoeder","3g komijnpoeder","3g paprikapoeder","3g zout","45g tahini","30g citroensap","45g water","1 knoflookteen, fijngeraspt","1 handvol platte peterselie","1 handvol granaatappelpitjes (optioneel)","4 mini naans"],
+   steps:["Bestrooi aubergineplakken aan beide kanten met zout. Laat 10 minuten staan, dep droog.","Meng olijfolie, knoflookpoeder, komijnpoeder, paprikapoeder en zout. Bestrijk beide kanten van de aubergine. Gooi de kikkererwten door de resterende marinade.","Smeer het rooster licht in met olie. Verwarm oven op 220 graden C met airfryer stand.","Leg aubergineplakken in een laag op het rooster. Rooster 10-12 minuten.","Draai de aubergine om en voeg de kikkererwten toe. Rooster nog 10 minuten.","Roer tahini, citroensap, water en knoflook tot gladde saus.","Warm mini naans 2-3 minuten op 180 graden C in de airfryer.","Leg aubergine op schaal, verdeel kikkererwten erover en lepel tahinisaus erover."],
+   notes:"Beide kanten zouten. Kikkererwten goed droogdeppen anders worden ze niet knapperig."},
+  {id:5,name:"Groene curry met kip",desc:"Thaise groene curry met zelfgemaakte kruidenpasta, kokosmelk en kip.",tags:["aziatisch"],time:"40 min",servings:2,kcal:550,
+   ingredients:["300g kipfilet, in stukken","400ml kokosmelk","2 el vissaus","1 rode paprika, in reepjes","1 blik bamboo shoots","2 el neutrale olie","2,5 cm galangal of gember","3 knoflooktenen","2 groene chilipepers","2 sjalotten","1 handvol koriandersteeltjes","2 stengels citroengras, fijngesneden","1 handvol Thaise basilicum","1 el shrimp paste"],
+   steps:["Blend galangal, knoflook, chilipepers, sjalotten, koriandersteeltjes, citroengras en shrimp paste tot pasta.","Verhit olie in een wok. Bak de kruidenpasta 2-3 minuten tot geurig.","Voeg de kip toe en bak rondom aan.","Giet de kokosmelk en vissaus erbij. Breng aan de kook.","Voeg paprika en bamboo shoots toe. Laat 10-15 minuten sudderen.","Proef en pas aan met vissaus. Strooi Thaise basilicum erover.","Serveer met rijst."],
+   notes:"Bird-eye pepers zijn veel pittiger dan gewone groene chilipepers. Shrimp paste geeft veel diepte."},
+  {id:6,name:"Gele curry met kabeljauw",desc:"Milde Thaise gele curry met verse kruidenpasta, kabeljauw en kokosmelk.",tags:["aziatisch"],time:"35 min",servings:2,kcal:500,
+   ingredients:["300g kabeljauw, in stukken","400ml kokosmelk","2 el vissaus","1 tl palmsuiker of bruine suiker","200g groente naar keuze","2 el neutrale olie","0,5 tl kurkuma","1 tl korianderzaad gemalen","1 handvol koriandersteeltjes","1 rawit","2 sjalotten","2 knoflooktenen","3 cm gember","2 stengels citroengras","2 limoenbladen","1 handvol cashewnoten"],
+   steps:["Blend kurkuma, korianderzaad, koriandersteeltjes, rawit, sjalotten, knoflook, gember en citroengras tot pasta.","Verhit olie in een pan. Bak de kruidenpasta 2 minuten.","Voeg kokosmelk, vissaus, palmsuiker en limoenbladen toe. Breng zachtjes aan de kook.","Voeg de groente toe en laat 5 minuten sudderen.","Leg de kabeljauw erin en pocheer 5-7 minuten op laag vuur.","Serveer met rijst en cashewnoten."],
+   notes:"Kabeljauw niet roeren als hij in de pan ligt, anders valt hij uit elkaar."},
+  {id:7,name:"Udon noodles stir fry",desc:"Japanse udon noodles in een umami-rijke saus met spitskool, babymais en lente-ui.",tags:["aziatisch","snel"],time:"20 min",servings:2,kcal:480,
+   ingredients:["300g udon noodles","1 el bruine suiker","2 el sojasaus","1 el mirin","1 el oestersaus","1 el rijstazijn","1 el shirodashi soepstock","0,5 tl samyang buldak saus","2 knoflooktenen fijngesneden","3 cm gember fijngeraspt","3 lente-uitjes in ringetjes","1 handvol babymais gehalveerd","200g spitskool in reepjes","2 el sesamzaad","2 el gebakken uitjes","2 eieren optioneel"],
+   steps:["Kook de udon noodles volgens verpakking. Afgiet en spoel af met koud water.","Meng sojasaus, bruine suiker, mirin, oestersaus, rijstazijn, shirodashi en buldak saus.","Verhit olie in een wok. Bak knoflook en gember 1 minuut.","Voeg babymais en spitskool toe. Roerbak 2-3 minuten op hoog vuur.","Voeg de noodles toe samen met de saus. Schep goed door en bak 2 minuten.","Optioneel: bak een spiegelei apart en leg bovenop.","Serveer bestrooid met sesamzaad, gebakken uitjes en lente-ui."],
+   notes:"Shirodashi is te vinden bij Amazing Oriental. Buldak saus is erg pittig - begin met een kwart theelepel."},
+  {id:8,name:"Garnalen roerbak met prik nam pla",desc:"Snelle roerbak met garnalen, ei en een pittige Thaise vissaus dip.",tags:["aziatisch","snel"],time:"20 min",servings:2,kcal:420,
+   ingredients:["250g garnalen gepeld","2 eieren","2 el sojasaus","2 knoflooktenen fijngesneden","1 rawit fijngesneden","3 bosuitjes in ringetjes","150g rijst","1 handvol cashewnoten optioneel","2 el neutrale olie","3 el vissaus voor prik nam pla","2 limoenen sap","3-4 kleine pepertjes fijngesneden","1,5 el bruine suiker","1 el knoflook fijngesneden"],
+   steps:["Kook de rijst.","Maak de prik nam pla: meng vissaus, limoensap, pepertjes, bruine suiker en knoflook. Roer tot suiker oplost.","Verhit olie in een wok. Bak knoflook en rawit 1 minuut.","Voeg garnalen toe en bak 2-3 minuten tot roze.","Schuif garnalen opzij, kluts eieren en scramble in de pan. Mix door de garnalen.","Voeg sojasaus toe en schep door.","Serveer met rijst, bosui en cashewnoten. Prik nam pla ernaast."],
+   notes:"Prik nam pla is een klassieke Thaise tafelsaus. Garnalen zijn snel gaar, niet te lang bakken."},
+  {id:9,name:"Nongshim Shin Kimchi ramen",desc:"Snelle upgrade van instant ramen met bleekselderij, gepocheerd ei, knoflook en crispy chili olie.",tags:["aziatisch","snel"],time:"10 min",servings:1,kcal:735,
+   ingredients:["1 pak Nongshim Shin Kimchi ramen","1 ei","1 stengel bleekselderij in plakjes","1 knoflookteen fijngesneden","1 el gebakken uitjes","1 el crispy chili olie"],
+   steps:["Snijd de knoflook fijn. Bak kort aan in een klein beetje olie in het pannetje tot het begint te geuren - niet laten bruinen. Giet dan het water erbij. Dit geeft de bouillon veel meer diepte.","Voeg de smaakpakketjes en noodles toe. Kook volgens verpakking (ca. 3 minuten).","Voeg de 
